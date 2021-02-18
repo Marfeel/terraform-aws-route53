@@ -21,6 +21,7 @@ resource "aws_route53_record" "this" {
   ttl            = lookup(each.value, "ttl", null)
   records        = lookup(each.value, "records", null)
   set_identifier = lookup(each.value, "set_identifier", null)
+  health_check_id = lookup(each.value, "health_check_id", null)
 
   dynamic "alias" {
     for_each = length(keys(lookup(each.value, "alias", {}))) == 0 ? [] : [true]
