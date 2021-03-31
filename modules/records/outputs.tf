@@ -8,7 +8,7 @@ output "this_route53_record_fqdn" {
   value       = { for k, v in aws_route53_record.this : k => v.fqdn }
 }
   
-output "this_route53_records" {
-  description = "The name of the record"
+output "this_route53_record_records" {
+  description = "The ip of the record"
   value       = { for k, v in aws_route53_record.this : k => v.records }
 }
