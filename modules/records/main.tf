@@ -5,13 +5,15 @@ locals {
     join(" ", compact(["${rs.name} ${rs.type}", lookup(rs, "set_identifier", "")])) => rs
   }
 
-  records_enabled = var.create && (var.zone_id != null || var.zone_name != null)
-  records_map     = local.records_enabled ? merge({}, local.recordsets) : {}
+  records_map = {
+    for k, v in local.recordsets :
+    k => v
+    if var.create && (var.zone_id != null || var.zone_name != null)
+  }
 }
 
 data "aws_route53_zone" "this" {
-  count = local.records_enabled ? 1 : 0
-
+  count = var.create && (var.zone_id != null || var.zone_name != null) ? 1 : 0
   zone_id      = var.zone_id
   name         = var.zone_name
   private_zone = var.private_zone
@@ -21,7 +23,6 @@ resource "aws_route53_record" "this" {
   for_each = local.records_map
 
   zone_id = data.aws_route53_zone.this[0].zone_id
-
   name            = each.value.name != "" ? "${each.value.name}.${data.aws_route53_zone.this[0].name}" : data.aws_route53_zone.this[0].name
   type            = each.value.type
   ttl             = lookup(each.value, "ttl", null)
@@ -60,3 +61,4 @@ resource "aws_route53_record" "this" {
     }
   }
 }
+
