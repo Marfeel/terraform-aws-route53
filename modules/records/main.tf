@@ -6,7 +6,7 @@ locals {
   }
 
   records_enabled = var.create && (var.zone_id != null || var.zone_name != null)
-  records_map     = local.records_enabled ? { for k, v in local.recordsets : k => v } : {}
+  records_map     = local.records_enabled ? merge({}, local.recordsets) : {}
 }
 
 data "aws_route53_zone" "this" {
