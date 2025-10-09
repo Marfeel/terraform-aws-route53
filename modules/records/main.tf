@@ -18,7 +18,7 @@ data "aws_route53_zone" "this" {
 }
 
 resource "aws_route53_record" "this" {
-  for_each        = local.records_map
+  for_each = local.records_map
 
   zone_id = data.aws_route53_zone.this[0].zone_id
 
