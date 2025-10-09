@@ -2,11 +2,7 @@ locals {
   # convert from list to map with unique keys
   recordsets = { for rs in var.records : join(" ", compact(["${rs.name} ${rs.type}", lookup(rs, "set_identifier", "")])) => rs }
 
-  records_map = {
-    for k, v in local.recordsets :
-    k => v
-    if var.create && (var.zone_id != null || var.zone_name != null)
-  }
+  records_map = { for k, v in local.recordsets : k => v if var.create && (var.zone_id != null || var.zone_name != null) }
 }
 
 data "aws_route53_zone" "this" {
