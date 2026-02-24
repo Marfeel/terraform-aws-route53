@@ -1,5 +1,6 @@
 locals {
   # convert recordsets to a map and filter based on zone creation conditions
+  recordsets = { for rs in var.records : join(" ", compact(["${rs.name} ${rs.type}", lookup(rs, "set_identifier", "")])) => rs }
   records_map = { for k, v in local.recordsets : k => v if var.create && (var.zone_id != null || var.zone_name != null) }
 }
 data "aws_route53_zone" "this" {
