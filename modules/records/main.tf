@@ -1,7 +1,7 @@
 locals {
   # convert recordsets to a map and filter based on zone creation conditions
   records_map = { for k, v in local.recordsets : k => v if var.create && (var.zone_id != null || var.zone_name != null) }
-
+}
 data "aws_route53_zone" "this" {
   count = var.create && (var.zone_id != null || var.zone_name != null) ? 1 : 0
 
